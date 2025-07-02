@@ -1,0 +1,25 @@
+apiVersion: v1
+entries:
+  stateful-data-generator:
+  - apiVersion: v2
+    appVersion: 1.1.1
+    created: "2025-07-02T11:40:00.989470364Z"
+    description: A Helm chart for the stateful data generator application with MongoDB
+    digest: 46115a0638ab8a28c230ee288746a89681e6e3da8c06f2d396c42971680b78ba
+    home: https://github.com/talhajuikar/stateful-data-generator
+    keywords:
+    - stateful
+    - data-generator
+    - mongodb
+    - nodejs
+    maintainers:
+    - email: talhajuikar5@gmail.com
+      name: Talha Juikar
+    name: stateful-data-generator
+    sources:
+    - https://github.com/talhajuikar/stateful-data-generator
+    type: application
+    urls:
+    - https://github.com/TalhaJuikar/helm-charts/releases/download/stateful-data-generator-0.1.1/stateful-data-generator-0.1.1.tgz
+    version: 0.1.1
+generated: "2025-07-02T11:40:00.989475383Z"
