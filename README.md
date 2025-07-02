@@ -1,4 +1,5 @@
 # Helm Charts Repository
+
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/talhajuikar-helm-charts)](https://artifacthub.io/packages/search?repo=talhajuikar-helm-charts)
 
 This repository contains Helm charts for various applications.
@@ -6,6 +7,7 @@ This repository contains Helm charts for various applications.
 ## Available Charts
 
 ### stateful-data-generator
+
 A Helm chart for the stateful data generator application with MongoDB.
 
 **Version:** 0.1.0  
