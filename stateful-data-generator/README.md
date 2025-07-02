@@ -15,6 +15,8 @@ To install the chart with the release name `my-stateful-app`:
 ```bash
 helm repo add my-charts https://talhajuikar.github.io/helm-charts/
 helm repo update
+
+helm install my-stateful-app my-charts/stateful-data-generator
 ```
 
 ## Uninstalling the Chart

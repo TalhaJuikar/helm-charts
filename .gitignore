@@ -1,0 +1,14 @@
+# Ignore packaged charts
+*.tgz
+
+# Ignore temporary files
+.DS_Store
+*.swp
+*.swo
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore dependency charts
+charts/*.tgz
