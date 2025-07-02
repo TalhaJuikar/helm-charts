@@ -13,7 +13,8 @@ This Helm chart deploys the Stateful Data Generator application along with Mongo
 To install the chart with the release name `my-stateful-app`:
 
 ```bash
-helm install my-stateful-app ./helm-chart
+helm repo add my-charts https://talhajuikar.github.io/helm-charts/
+helm repo update
 ```
 
 ## Uninstalling the Chart
@@ -92,16 +93,4 @@ helm install my-app ./helm-chart \
 
 ```bash
 helm install my-app ./helm-chart -f custom-values.yaml
-```
-
-### Upgrade release
-
-```bash
-helm upgrade my-app ./helm-chart
-```
-
-### Test the deployment
-
-```bash
-helm test my-app
 ```
