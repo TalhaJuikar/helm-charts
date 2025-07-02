@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talha's Helm Charts Repository</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            margin: 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .usage {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .usage h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .code-block {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        .charts-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .charts-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th {
+            background: #34495e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .chart-name {
+            font-weight: 600;
+            color: #2980b9;
+        }
+        .version {
+            background: #27ae60;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+            background: #fff5f5;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            border-top: 1px solid #ecf0f1;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div class="header">
+        <h1>🎯 Talha's Helm Charts</h1>
+        <p>Production-ready Helm charts for Kubernetes applications</p>
+    </div> -->
+
+    <div class="usage">
+        <h2>📦 Quick Start</h2>
+        <p>Add this repository to Helm:</p>
+        <div class="code-block">helm repo add talhajuikar-charts https://talhajuikar.github.io/helm-charts/<br>helm repo update</div>
+        
+        <p>Install a chart:</p>
+        <div class="code-block">helm install my-release talhajuikar-charts/&lt;chart-name&gt;</div>
+    </div>
+
+    <div class="charts-container">
+        <h2 class="charts-header">📋 Available Charts</h2>
+        <div id="loading" class="loading">Loading charts...</div>
+        <div id="error" class="error" style="display: none;">
+            Failed to load charts. Please check the repository configuration.
+        </div>
+        <table id="charts-table" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Chart</th>
+                    <th>Description</th>
+                    <th>Latest Version</th>
+                    <th>App Version</th>
+                    <th>Download</th>
+                </tr>
+            </thead>
+            <tbody id="charts-tbody">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>
+            📚 <a href="https://github.com/TalhaJuikar/helm-charts" target="_blank">View on GitHub</a> | 
+            🐛 <a href="https://github.com/TalhaJuikar/helm-charts/issues" target="_blank">Report Issues</a> |
+            📖 <a href="index.yaml" target="_blank">Raw Index</a>
+        </p>
+        <p>Generated automatically from Helm repository index</p>
+    </div>
+
+    <script>
+        async function loadCharts() {
+            try {
+                const response = await fetch('index.yaml');
+                const text = await response.text();
+                
+                // Parse YAML (simple parser for our use case)
+                const lines = text.split('\n');
+                const charts = {};
+                let currentChart = null;
+                let currentVersion = null;
+                
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    
+                    // Chart name (top level under entries)
+                    if (trimmed.match(/^[a-zA-Z0-9-]+:$/)) {
+                        currentChart = trimmed.replace(':', '');
+                        charts[currentChart] = [];
+                    }
+                    
+                    // New version entry
+                    if (trimmed.startsWith('- apiVersion:')) {
+                        currentVersion = {};
+                        if (currentChart) {
+                            charts[currentChart].push(currentVersion);
+                        }
+                    }
+                    
+                    // Parse fields
+                    if (currentVersion) {
+                        if (trimmed.startsWith('version:')) {
+                            currentVersion.version = trimmed.split('version:')[1].trim();
+                        } else if (trimmed.startsWith('appVersion:')) {
+                            currentVersion.appVersion = trimmed.split('appVersion:')[1].trim().replace(/"/g, '');
+                        } else if (trimmed.startsWith('description:')) {
+                            currentVersion.description = trimmed.split('description:')[1].trim();
+                        } else if (trimmed.startsWith('- https://github.com/')) {
+                            currentVersion.downloadUrl = trimmed.substring(2).trim();
+                        }
+                    }
+                }
+                
+                displayCharts(charts);
+                
+            } catch (error) {
+                console.error('Error loading charts:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+        
+        function displayCharts(charts) {
+            const tbody = document.getElementById('charts-tbody');
+            tbody.innerHTML = '';
+            
+            for (const [chartName, versions] of Object.entries(charts)) {
+                if (versions.length > 0) {
+                    // Get the latest version (first in the list)
+                    const latest = versions[0];
+                    
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td><span class="chart-name">${chartName}</span></td>
+                        <td>${latest.description || 'No description available'}</td>
+                        <td><span class="version">${latest.version}</span></td>
+                        <td>${latest.appVersion || 'N/A'}</td>
+                        <td>
+                            ${latest.downloadUrl ? 
+                                `<a href="${latest.downloadUrl}" target="_blank">📥 Download</a>` : 
+                                'N/A'
+                            }
+                        </td>
+                    `;
+                }
+            }
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('charts-table').style.display = 'table';
+        }
+        
+        // Load charts when page loads
+        loadCharts();
+        
+        // Auto-refresh every 5 minutes
+        setInterval(loadCharts, 300000);
+    </script>
+</body>
+</html>
