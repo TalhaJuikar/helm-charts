@@ -1,0 +1,21 @@
+{{- if .Values.mongodb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "stateful-data-generator.mongodb.serviceName" . }}
+  namespace: {{ include "stateful-data-generator.namespace" . }}
+  labels:
+    {{- include "stateful-data-generator.mongodb.labels" . | nindent 4 }}
+spec:
+  {{- if eq .Values.mongodb.service.type "ClusterIP" }}
+  clusterIP: None  # Headless service for StatefulSet
+  {{- end }}
+  type: {{ .Values.mongodb.service.type }}
+  ports:
+    - port: {{ .Values.mongodb.service.port }}
+      targetPort: {{ .Values.mongodb.service.port }}
+      protocol: TCP
+      name: mongodb
+  selector:
+    {{- include "stateful-data-generator.mongodb.selectorLabels" . | nindent 4 }}
+{{- end }}

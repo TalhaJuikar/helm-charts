@@ -1,0 +1,9 @@
+{{- if and .Values.global.namespace (ne .Values.global.namespace .Release.Namespace) .Values.namespaceCreate }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.global.namespace }}
+  labels:
+    {{- include "stateful-data-generator.labels" . | nindent 4 }}
+    app.kubernetes.io/component: namespace
+{{- end }}
