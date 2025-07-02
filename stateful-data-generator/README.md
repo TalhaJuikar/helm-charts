@@ -6,7 +6,7 @@ This Helm chart deploys the Stateful Data Generator application along with Mongo
 
 - Kubernetes 1.16+
 - Helm 3.0+
-- PV provisioner support in the underlying infrastructure (for MongoDB persistence), a default StorageClass is recommended.
+- A default storage class configured in your Kubernetes cluster
 
 ## Installing the Chart
 
